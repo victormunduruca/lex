@@ -15,10 +15,10 @@ def next_state(state, char):
     elif state == 4:
         if char.isdigit():
             return 4
-    return 666
+    return util.NO_NEXT_STATE
 
 fsm = util.Fsm([1, 2, 3, 4], 1, [2, 4], next_state)
 
 
 
-print(fsm.run("1.2 "))
+print(fsm.run("1.2  "))

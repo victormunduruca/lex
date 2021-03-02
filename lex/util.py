@@ -9,12 +9,10 @@ class Fsm:
         current_state = self.initial_state
         for char in input_string:
             next_state = self.next_state(current_state, char)
-            print(next_state)
             if (current_state in self.accepting_states) and next_state == 666:
                 return True
             if next_state == 666:
                 return False
             current_state = next_state
-        return True 
-
-
+            print(next_state)
+        return current_state in self.accepting_states

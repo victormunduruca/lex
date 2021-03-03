@@ -1,4 +1,4 @@
-NO_NEXT_STATE = "No Next State"
+NO_NEXT_STATE = -1
 class Fsm:
     def __init__(self, states, initial_state, accepting_states, next_state):
         self.states = states

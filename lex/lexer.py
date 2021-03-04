@@ -21,7 +21,7 @@ class Lexer:
 
     def recognize_identifiers(self):
         identifier_fsm = util.Fsm([1, 2], 1, [2], self.identifier_transitions)
-        [recognized, value] = identifier_fsm.run(self.input_str[self.current_position])
+        [recognized, value] = identifier_fsm.run(self.input_str[self.current_position:])
         self.current_position += len(value)
         print(self.current_position)
         print(recognized)

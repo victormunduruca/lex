@@ -1,3 +1,4 @@
+import re
 NO_NEXT_STATE = -1
 class Fsm:
     def __init__(self, states, initial_state, accepting_states, next_state):
@@ -16,3 +17,6 @@ class Fsm:
             current_state = next_state
             value_buffer += char
         return [current_state in self.accepting_states, value_buffer]
+    
+def is_letter(char):
+    return char.isalpha()

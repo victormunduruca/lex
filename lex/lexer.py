@@ -10,6 +10,23 @@ class Lexer:
     def run(self):
         self.next_token()
 
+    def identifier_transitions(self, state, char):
+        if state == 1:
+            if char.isalpha():
+                return 2
+        elif state == 2:
+            if char.isdigit() or char.isalpha() or char == '_':
+                return 2
+        return util.NO_NEXT_STATE
+
+    def recognize_identifiers(self):
+        identifier_fsm = util.Fsm([1, 2], 1, [2], self.identifier_transitions)
+        [recognized, value] = identifier_fsm.run(self.input_str[self.current_position])
+        self.current_position += len(value)
+        print(self.current_position)
+        print(recognized)
+        print(value)
+
     def number_transitions(self, state, char):
         if state == 1:
             if char.isdigit():
@@ -44,6 +61,8 @@ class Lexer:
         char = self.input_str[self.current_position]
         if char.isdigit():
             return self.recognize_numbers()
+        elif char.isalpha():
+            return self.recognize_identifiers()
         
 
 

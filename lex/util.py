@@ -17,5 +17,8 @@ class Fsm:
             value_buffer += char
         return [current_state in self.accepting_states, value_buffer]
     
-def is_letter(char):
-    return char.isalpha()
+
+def isdelimiter(char):
+    if char == '{' or char == '}' or char == '(' or char == ')' or char == '[' or char == ']' or char == ','or char == '.':
+        return True
+    return False

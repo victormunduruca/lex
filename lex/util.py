@@ -7,13 +7,12 @@ class Fsm:
         self.next_state = next_state
 
     def run(self, input_string):
+        value_buffer = ''
         current_state = self.initial_state
         for char in input_string:
             next_state = self.next_state(current_state, char)
-            if (current_state in self.accepting_states) and next_state == NO_NEXT_STATE:
-                return True
             if next_state == NO_NEXT_STATE:
                 return False
             current_state = next_state
-            print(next_state)
-        return current_state in self.accepting_states
+            value_buffer += char
+        return [current_state in self.accepting_states, value_buffer]

@@ -9,10 +9,10 @@ class Fsm:
     def run(self, input_string):
         value_buffer = ''
         current_state = self.initial_state
-        for char in input_string:
+        for char in input_string:   
             next_state = self.next_state(current_state, char)
             if next_state == NO_NEXT_STATE:
-                return False
+                break
             current_state = next_state
             value_buffer += char
         return [current_state in self.accepting_states, value_buffer]

@@ -29,7 +29,7 @@ class Lexer:
                 return
         return util.NO_NEXT_STATE
 
-     def identifier_transitions(self, state, char):
+    def identifier_transitions(self, state, char):
         if state == 1:
             if char.isalpha():
                 return 2
@@ -42,9 +42,11 @@ class Lexer:
         identifier_fsm = util.Fsm([1, 2], 1, [2], self.identifier_transitions)
         [recognized, value] = identifier_fsm.run(self.input_str[self.current_position:])
         self.current_position += len(value)
+        if(util.isreserved(value)):
+            print('na real é reservada')
         print(self.current_position)
-        print(recognized)
-        print(value)
+        #print(recognized)
+       # print(value)
 
     def recognize_numbers(self):
         number_fsm = util.Fsm([1, 2, 3, 4], 1, [2, 4], self.number_transitions)
@@ -64,7 +66,10 @@ class Lexer:
             return self.recognize_numbers()
         elif char.isalpha():
             return self.recognize_identifiers()
+        elif util.isdelimiter(char):
+            print('is delimiter')
 
+print(util.isreserved('var'))
 
 FILE = open('entrada/entrada1.txt', 'r')
 

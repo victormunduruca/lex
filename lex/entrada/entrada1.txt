@@ -1,1 +1,1 @@
-abc 1.1 2 hahaha  2. var show_de_bola 1.
+abc 1.1 2 hahaha  2. var show_de_bola 1. = 

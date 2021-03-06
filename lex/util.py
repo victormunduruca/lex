@@ -1,4 +1,5 @@
-NO_NEXT_STATE = -1
+from states import * 
+
 class Fsm:
     def __init__(self, states, initial_state, accepting_states, next_state):
         self.states = states
@@ -11,7 +12,8 @@ class Fsm:
         current_state = self.initial_state
         for char in input_string:   
             next_state = self.next_state(current_state, char)
-            if next_state == NO_NEXT_STATE:
+            print(next_state)
+            if next_state == States.invalid_state:
                 break
             current_state = next_state
             value_buffer += char

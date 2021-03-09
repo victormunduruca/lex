@@ -34,3 +34,6 @@ class States(Enum):
     string_escape = 23
     string_escape_quote = 24
     string_final = 25
+
+    space = 100
+    new_line = 101

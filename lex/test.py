@@ -2,6 +2,10 @@ import re
 import util
 from states import *
 
+global line_num
+global tokens
+global current_position
+
 delimiters = [
     ';',
     ',',
@@ -17,20 +21,17 @@ delimiters = [
 def isdigit(x):
     return re.match(r'\d', x, re.ASCII) is not None
 
-
-def isletter(x):
-    return re.match(r'([a-z] || [A-Z])', x) is not None
-
-
 def issymbol(x):
     return (ord(x) > 31) and (ord(x) < 127) and not (ord(x) == 34)
 
-# def isdelimiter(x):
-#     return x is in delimiters
 
-def temp_transitions(state, char):
+def get_next_state(state, char):
     if state == States.start:
-        if isdigit(char):
+        if char == ' ':
+            return States.space
+        elif char == "\n":
+            return States.new_line
+        elif isdigit(char):
             return States.num 
         elif char.isalpha():
             return States.ide
@@ -67,7 +68,7 @@ def temp_transitions(state, char):
             return States.num_after_dot
 
     elif state == States.ide:
-        if isletter(char) or isdigit(char) or char == '_':
+        if char.isalpha() or isdigit(char) or char == '_':
             return States.ide
 
     elif state == States.rel:
@@ -132,17 +133,63 @@ def temp_transitions(state, char):
         elif char.isalpha() or char.isdigit() or issymbol(char):
             return States.string
 
-
-
-
-
     return States.invalid_state #TODO Save buffer logic
 
+
+accepting_states = [States.num, States.num_after_dot, States.rel_equal, States.rel, States.exclamation, States.ide, States.log_complete, States.art_complete, States.art_plus, States.art_minus, States.slash, States.delimiter, States.com_line_complete, States.com_block_complete, States.string_final, States.space, States.new_line]
+token_state_dictionary = {
+    States.num: "NRO",
+    States.num_after_dot: "NRO",
+    States.num_dot: "NMF",
+    States.art_complete: "REL",
+    States.rel: "REL",
+    States.rel_equal: "REL",
+    States.exclamation: "LOG",
+    States.log_complete: "LOG",
+    States.ide: "IDE",
+    States.art_complete: "ART",
+    States.art_plus: "ART",
+    States.art_minus: "ART",
+    States.slash: "ART",
+    States.delimiter: "DEL",
+    States.string_final: "CAD",
+    States.string: "CMF",
+    States.string_escape: "CMF",
+    States.string_escape_quote: "CMF",
+    States.com_block: "CoMF",
+    States.com_block_after_asterisk: "CoMF",
+    States.com_line: "CoMF",
+    States.log_incomplete: "OpMF"
+}
+
 FILE = open('entrada/entrada1.txt', 'r')
-input_string = FILE.read()
-fsm = util.Fsm([0], States.start, [States.num, States.num_after_dot, States.rel_equal, States.rel, States.exclamation, States.ide, States.log_complete, States.art_complete, States.art_plus, States.art_minus, States.slash, States.delimiter, States.com_line_complete, States.com_block_complete, States.string_final], temp_transitions)
+file_string = FILE.read()
+current_position = 0
+line = 0
+tokens = []
 
-[recognized, value] = fsm.run(input_string)
-print(recognized)
-print(value)
+def next_token(input_string):
+    global current_position
+    global line
+    value_buffer = ''
+    current_state = States.start
+    for char in input_string:
+        next_state = get_next_state(current_state, char)
+        #print(next_state)
+        if next_state == States.invalid_state:
+            break
+        current_state = next_state
+        value_buffer += char
+    if current_state == States.space:
+        current_position += 1
+    elif current_state == States.new_line:
+        current_position += 1
+        line += 1
+    else:
+        print(f"{token_state_dictionary[current_state]} {value_buffer} {line}")
+        current_position += len(value_buffer)
+        #print(current_position)
 
+print(len(file_string))
+while(current_position < len(file_string)):
+    next_token(file_string[current_position:])
